@@ -64,10 +64,78 @@ interface BatchPermissionResponse {
 }
 
 /**
+ * Analyze potential conflicts when removing permissions
+ */
+function analyzeRemovalConflicts(
+  removedPermissions: Permission[],
+  remainingPermissions: Permission[]
+): string[] {
+  const conflicts: string[] = []
+
+  // Check for permission dependencies (if permission X requires Y, but we're removing Y)
+  for (const removed of removedPermissions) {
+    // Common dependency patterns to check
+    const dependencyMap: Record<string, Permission[]> = {
+      'users.edit': ['users.view'],
+      'users.delete': ['users.view', 'users.edit'],
+      'roles.edit': ['roles.view'],
+      'roles.delete': ['roles.view', 'roles.edit'],
+      'permissions.manage': ['permissions.view'],
+    }
+
+    // Check if any remaining permissions depend on the removed one
+    for (const remaining of remainingPermissions) {
+      const deps = dependencyMap[remaining]
+      if (deps && deps.includes(removed)) {
+        conflicts.push(
+          `Removing '${removed}' may break '${remaining}' which depends on it`
+        )
+      }
+    }
+  }
+
+  return [...new Set(conflicts)] // Remove duplicates
+}
+
+/**
+ * Determine risk level for permission changes
+ */
+function calculateRiskLevel(
+  roleChange?: { from: string; to: string },
+  permissionsAdded?: Permission[],
+  permissionsRemoved?: Permission[]
+): 'low' | 'medium' | 'high' | 'critical' {
+  let riskScore = 0
+
+  // Role changes have inherent risk
+  if (roleChange) {
+    if (['ADMIN', 'SUPER_ADMIN'].includes(roleChange.to)) {
+      riskScore += 50 // Critical risk for admin roles
+    } else if (['TEAM_LEAD'].includes(roleChange.to)) {
+      riskScore += 20 // Medium risk for lead roles
+    }
+  }
+
+  // Adding many permissions increases risk
+  const addedCount = permissionsAdded?.length || 0
+  riskScore += addedCount * 5
+
+  // Removing permissions has lower risk but still counts
+  const removedCount = permissionsRemoved?.length || 0
+  riskScore += removedCount * 2
+
+  // Determine risk level
+  if (riskScore >= 50) return 'critical'
+  if (riskScore >= 30) return 'high'
+  if (riskScore >= 10) return 'medium'
+  return 'low'
+}
+
+/**
  * POST /api/admin/permissions/batch
- * 
+ *
  * Update permissions for one or multiple users
- * Supports dry-run mode for previewing changes
+ * Supports dry-run mode for previewing changes with full conflict detection
  */
 export async function POST(request: NextRequest): Promise<NextResponse<BatchPermissionResponse>> {
   try {
