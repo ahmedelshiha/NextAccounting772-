@@ -437,8 +437,8 @@ export default function UnifiedPermissionModal({
   )
 
   const tabsContent = (
-    <Tabs 
-      value={activeTab} 
+    <Tabs
+      value={activeTab}
       onValueChange={(value) => setActiveTab(value as TabType)}
       className={cn(
         'flex-1 overflow-hidden flex flex-col',
@@ -447,32 +447,55 @@ export default function UnifiedPermissionModal({
     >
       <TabsList className={cn(
         'grid rounded-none border-b h-auto bg-gray-50',
-        isMobile ? 'grid-cols-2 px-3' : 'grid-cols-4 px-6',
-        'w-full'
+        isMobile
+          ? (isRoleForm ? 'grid-cols-2' : 'grid-cols-2')
+          : (isRoleForm ? 'grid-cols-3' : 'grid-cols-4'),
+        'px-3 md:px-6 w-full'
       )}>
-        <TabsTrigger value="role" className="relative text-xs md:text-sm">
-          Role
-          {selectedRole !== currentRole && (
-            <Badge className="ml-1 md:ml-2 h-4 md:h-5 rounded px-1 text-xs" variant="secondary">
-              {changeCount}
-            </Badge>
-          )}
-        </TabsTrigger>
-        {allowCustomPermissions && (
-          <TabsTrigger value="custom" className="relative text-xs md:text-sm">
-            Perms
-            {changeCount > 0 && selectedRole === currentRole && (
-              <Badge className="ml-1 md:ml-2 h-4 md:h-5 rounded px-1 text-xs" variant="secondary">
-                {changeCount}
-              </Badge>
+        {isRoleForm ? (
+          <>
+            <TabsTrigger value="role" className="relative text-xs md:text-sm">
+              Details
+            </TabsTrigger>
+            <TabsTrigger value="custom" className="relative text-xs md:text-sm">
+              Permissions
+              {selectedPermissions.length > 0 && (
+                <Badge className="ml-1 md:ml-2 h-4 md:h-5 rounded px-1 text-xs" variant="secondary">
+                  {selectedPermissions.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+            {!isMobile && (
+              <TabsTrigger value="templates" className="text-xs md:text-sm">Templates</TabsTrigger>
             )}
-          </TabsTrigger>
-        )}
-        {!isMobile && showTemplates && (
-          <TabsTrigger value="templates" className="text-xs md:text-sm">Templates</TabsTrigger>
-        )}
-        {!isMobile && showHistory && (
-          <TabsTrigger value="history" className="text-xs md:text-sm">History</TabsTrigger>
+          </>
+        ) : (
+          <>
+            <TabsTrigger value="role" className="relative text-xs md:text-sm">
+              Role
+              {selectedRole !== currentRole && (
+                <Badge className="ml-1 md:ml-2 h-4 md:h-5 rounded px-1 text-xs" variant="secondary">
+                  {changeCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+            {allowCustomPermissions && (
+              <TabsTrigger value="custom" className="relative text-xs md:text-sm">
+                Perms
+                {changeCount > 0 && selectedRole === currentRole && (
+                  <Badge className="ml-1 md:ml-2 h-4 md:h-5 rounded px-1 text-xs" variant="secondary">
+                    {changeCount}
+                  </Badge>
+                )}
+              </TabsTrigger>
+            )}
+            {!isMobile && showTemplates && (
+              <TabsTrigger value="templates" className="text-xs md:text-sm">Templates</TabsTrigger>
+            )}
+            {!isMobile && showHistory && (
+              <TabsTrigger value="history" className="text-xs md:text-sm">History</TabsTrigger>
+            )}
+          </>
         )}
       </TabsList>
 
