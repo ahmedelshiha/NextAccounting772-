@@ -179,6 +179,15 @@ export const GET = withTenantContext(async (request: Request) => {
             limit,
             total,
             pages: totalPages
+          },
+          filters: {
+            search: search || undefined,
+            role: role || undefined,
+            status: status || undefined,
+            tier: tier || undefined,
+            department: department || undefined,
+            sortBy,
+            sortOrder
           }
         },
         {
@@ -188,7 +197,10 @@ export const GET = withTenantContext(async (request: Request) => {
             'X-Total-Count': total.toString(),
             'X-Total-Pages': totalPages.toString(),
             'X-Current-Page': page.toString(),
-            'X-Page-Size': limit.toString()
+            'X-Page-Size': limit.toString(),
+            'X-Filter-Search': search || 'none',
+            'X-Filter-Role': role || 'none',
+            'X-Filter-Tier': tier || 'none'
           }
         }
       )
