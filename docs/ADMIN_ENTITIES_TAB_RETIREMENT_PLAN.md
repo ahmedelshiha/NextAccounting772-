@@ -171,3 +171,63 @@
 - Stage behind `RETIRE_ENTITIES_TAB` in staging for 2-3 days.
 - Enable in production with redirects and deprecation headers.
 - After 1-2 sprints, remove legacy APIs/tests.
+
+---
+
+## Single-Page Dashboard Redesign (Oracle Fusion–style “Work Area”)
+
+### Objectives
+- Convert Dashboard into a single-page work area focused on operations and user management productivity.
+- Surface User Directory at the top; reduce clicks; consolidate Overview/Operations into one canvas.
+
+### Information Architecture
+- Primary: User Directory (virtualized grid/list) with sticky global filters and saved views.
+- Secondary: Compact infolets (KPIs), Approvals/Workflows, Import/Export, Recent Activity.
+- Utilities: Command Bar (Add, Import CSV, Bulk Update, Export, Refresh), Command Palette (⌘K), Saved Views (URL-addressable).
+
+### Layout (desktop)
+- Header: Title + Command Bar; right-aligned omnibox search (name/email/id/role) with suggestions.
+- Infolets row: 3–4 compact tiles; collapsible; defaults to compact to keep directory above the fold.
+- Left filter rail (collapsible): Role, Status, Created, Department, Tier; sticky on scroll; counts per facet.
+- Main content (pinned first): User Directory with column chooser, list/card toggle, infinite pagination, selection.
+- Details: Split pane/drawer opens on row select; tabs inside (Overview, Details, Activity, Settings) without leaving page.
+- Optional right rail: Pending Approvals, In-Progress Workflows, Alerts; collapsible.
+
+### Interactions (Oracle patterns)
+- Create/Tasks menu: New User → Client/Team Member/Team Lead/Admin (role-first); contextual actions by selection count.
+- Bulk action bar on selection: Assign Role, Change Status, Export, Delete; impact preview.
+- Saved Views: “All, Clients, Team, Admins, My Team, Recently Added”; sharable via URL.
+- Filter chips with one-click clear/apply; keyboard shortcuts; row kebab actions (RBAC-gated).
+
+### Performance & Resilience
+- Server-side paging + filters; 30s cache; request dedupe; optimistic updates; background refresh; skeleton loaders.
+
+### Accessibility & i18n
+- Landmarks for header/nav/main/aside; ARIA grid with row/col headers; live regions for actions; full keyboard Nav; RTL-safe.
+
+### Mobile/Tablet
+- Sticky search and primary actions; filters in bottom sheet; directory in card mode; drawer for details; gesture-friendly.
+
+### Telemetry & Rollout
+- Metrics: view adoption, search-to-action rate, bulk success/errors, save-view usage.
+- A/B: compact vs expanded infolets; enable with feature flag `DASHBOARD_SINGLE_PAGE`.
+
+### Migration Steps (incremental)
+1. Move User Directory above infolets; introduce compact infolets.
+2. Add left filter rail + saved views + omnibox search.
+3. Add Command Bar + keyboard palette (⌘K).
+4. Implement split-pane/drawer for details; retire child tabs.
+5. Update tests/docs; monitor telemetry and iterate.
+
+### Files Impact
+- `src/app/admin/users/components/tabs/ExecutiveDashboardTab.tsx`
+- `src/app/admin/users/EnterpriseUsersPage.tsx`
+- `src/app/admin/users/components/UsersTable.tsx`
+- `src/app/admin/users/components/AdvancedUserFilters.tsx`
+- `src/app/admin/users/hooks/useFilterUsers.ts`
+- `src/app/admin/users/components/*` (command bar, drawer, infolets)
+
+### Acceptance Criteria (single-page redesign)
+- User Directory is visible above the fold on desktop; <2 clicks to common actions.
+- Filters are sticky; saved views persist via URL; virtualized grid remains smooth at 1k+ rows.
+- Drawer interaction avoids page navigation; bulk bar appears contextually; all actions RBAC-gated.
