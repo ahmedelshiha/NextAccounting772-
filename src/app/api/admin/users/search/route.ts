@@ -169,7 +169,8 @@ export const GET = withTenantContext(async (request: NextRequest) => {
     const hasNextPage = filters.page < totalPages
     const hasPreviousPage = filters.page > 1
 
-    return NextResponse.json({
+    // Build response object
+    const responseData = {
       success: true,
       data: users,
       pagination: {
@@ -188,6 +189,28 @@ export const GET = withTenantContext(async (request: NextRequest) => {
         tier: filters.tier,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder
+      }
+    }
+
+    // Generate ETag from response data for caching
+    const etagData = JSON.stringify(responseData)
+    const etag = `"${createHash('sha256').update(etagData).digest('hex')}"`
+
+    // Check If-None-Match header for conditional request
+    const ifNoneMatch = request.headers.get('if-none-match')
+    if (ifNoneMatch && ifNoneMatch === etag) {
+      return new NextResponse(null, { status: 304, headers: { ETag: etag } })
+    }
+
+    // Return response with caching headers
+    return NextResponse.json(responseData, {
+      headers: {
+        ETag: etag,
+        'Cache-Control': 'private, max-age=30, stale-while-revalidate=60',
+        'X-Total-Count': total.toString(),
+        'X-Total-Pages': totalPages.toString(),
+        'X-Current-Page': filters.page.toString(),
+        'X-Page-Size': filters.limit.toString()
       }
     })
   } catch (error) {
