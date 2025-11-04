@@ -9,6 +9,7 @@ import { applyRateLimit, getClientIp } from '@/lib/rate-limit'
 import { tenantFilter } from '@/lib/tenant'
 
 export const runtime = 'nodejs'
+export const revalidate = 30 // ISR: Revalidate every 30 seconds
 
 export const GET = withTenantContext(async (request: Request) => {
   const ctx = requireTenantContext()
