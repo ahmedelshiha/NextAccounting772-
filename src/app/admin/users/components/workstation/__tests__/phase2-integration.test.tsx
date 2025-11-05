@@ -396,9 +396,8 @@ describe('Phase 2: Workstation Integration Tests', () => {
         </WorkstationTestWrapper>
       )
 
-      // Look for action buttons
-      const buttons = screen.queryAllByRole('button')
-      expect(buttons.length).toBeGreaterThan(0)
+      // Look for quick actions bar
+      expect(screen.queryByTestId('quick-actions-bar')).toBeInTheDocument()
     })
 
     it('should call onRefresh when refresh button is clicked', async () => {
