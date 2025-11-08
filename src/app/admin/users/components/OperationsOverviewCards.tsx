@@ -7,7 +7,6 @@ export interface OperationsMetrics {
   totalUsers: number
   pendingApprovals: number
   inProgressWorkflows: number
-  dueThisWeek: number
   systemHealth?: number
 }
 
