@@ -176,6 +176,37 @@ export default function TasksList() {
           </div>
         </div>
       )}
+
+      {/* Status modal */}
+      <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('dashboard.setStatus')}</DialogTitle>
+            <DialogDescription>{t('dashboard.setStatusConfirm', { count: selectedIds.length })}</DialogDescription>
+          </DialogHeader>
+
+          <div className="p-4">
+            <Select value={selectedBulkStatus || undefined} onValueChange={(v) => setSelectedBulkStatus(v || null)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t('common.selectStatus')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="OPEN">Open</SelectItem>
+                <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                <SelectItem value="BLOCKED">Blocked</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
+                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStatusModalOpen(false)}>{t('common.cancel')}</Button>
+            <Button onClick={applyStatusBulk} disabled={!selectedBulkStatus}>{t('common.apply')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   )
 }
