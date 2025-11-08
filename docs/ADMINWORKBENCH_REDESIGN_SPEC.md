@@ -124,7 +124,7 @@ This document provides:
 - ✅ **All interactive elements** (buttons, dropdowns, selections)
 - ✅ **Full component specifications** (exact styling for each component)
 - ✅ **Phased implementation plan** (5 phases, 27 specific tasks)
-- ✅ **Production deployment checklist** (with feature flag strategy)
+- ��� **Production deployment checklist** (with feature flag strategy)
 
 ---
 
@@ -489,14 +489,14 @@ This document provides:
 │                                                         │
 │  Charts coming soon...                                  │
 │                                                         │
-├────���────────────────────────────────────────────────────┤
+├────�����────────────────────────────────────────────────────┤
 │ [Total Users: 6] [Pending: 0] [In Progress: 6] [Due: 0] │ ← 4 cards, dark bg
 ├──────────────────────────────────────────────────��──────┤
 │ User Directory (minimal rows shown)                      │
 │ ┌─────────────────────────────────────────────────────┐ │
 │ │ Name         | Email         | Role   | Status | ... │ │
 │ │ John Doe     | john@...      | Admin  | Active | ... │ │
-│ └─────────────────────────────────────────────────────┘ │
+│ └────────────────────────────────────��────────────────┘ │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -523,7 +523,7 @@ This document provides:
 │                      │ │ Emily │ emily@ │ Edit. │Active │...│  │
 │                      │ │ Mike  │ mike@  │ Admin │Active │...│  │
 │                      │ │ Sophia│ sophia@│ View. │Inact │...│  │
-│                      │ └─────────────────────────────────────┘  │
+│                      │ └───────────────────────���─────────────┘  │
 ├──────────────────────┴───────────────────────────────────────────┤
 │ Status: Active ▼  [Apply Changes]  [3 users selected]            │ ← Sticky footer
 └──────────────────────────────────────────────────────────────────┘
@@ -663,7 +663,7 @@ This document provides:
 | **Row Selection** | Checkboxes present | Checkboxes visible | ⚠️ Visibility | Ensure visible |
 | **Row Hover** | Dark hover effect | Light hover effect | ❌ Color mismatch | Change hover color |
 | **Status Badge Colors** | Dark theme | Light theme (green/red/gray) | ❌ Color mismatch | Update badge colors |
-| **Actions Column** | Present (•••) | Present (•••) | ✅ Same | No change |
+| **Actions Column** | Present (��••) | Present (•••) | ✅ Same | No change |
 | **Table Border** | Dark border | Light border (#e5e7eb) | ❌ Color mismatch | Change border color |
 | **Table Background** | Dark | White | ❌ Color mismatch | Change background |
 
@@ -1295,7 +1295,7 @@ export default function AdminSidebar({ onFilterChange, onClose }) {
 - bg-gray-900 → bg-white
 - bg-gray-800 → bg-gray-50 (hover)
 - text-gray-100 → text-gray-900
-- border-gray-700 → border-gray-200
+- border-gray-700 ��� border-gray-200
 
 /* Status badge colors */
 - Active: bg-green-100 text-green-800 border border-green-300
@@ -1888,7 +1888,351 @@ bg-red-900/20 text-red-400 → bg-red-100 text-red-800 border border-red-300
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** January 2025  
-**Author:** Engineering Team  
+## Part 11: USER DIRECTORY TABLE IMPLEMENTATION PLAN
+
+### Overview
+This section documents the User Directory table features analyzed from the target design and provides a detailed implementation checklist to ensure all features are correctly implemented.
+
+### Target Design Features Analysis
+
+**User Directory Table Structure:**
+- **6 Columns:** Name (with avatar), Email, Role, Status, Date Joined, Actions
+- **6+ Visible Rows:** Users display with real data
+- **Row Interactions:** Hover effects, checkbox selection, three-dots action menu
+- **Status Badges:**
+  - Active: Green background (#10b981) with green border (#059669)
+  - Inactive: Red background (#ef4444) with red border (#dc2626)
+- **Role Badges:** Color-coded (Admin: red, Editor: blue, Viewer: green, Team Lead: purple, Staff: cyan, Client: emerald)
+- **Avatar Display:** Small circular images in Name column with fallback
+- **Email Truncation:** Long emails show ellipsis (...)
+- **Date Formatting:** "Mon DD, YYYY" format (e.g., "Jan 19, 2024")
+
+### Implementation Checklist
+
+#### Table Core Functionality (5 items)
+
+1. **Verify Table Column Rendering**
+   - [x] All 6 columns render: Name, Email, Role, Status, Date Joined, Actions
+   - [x] Column order matches target design
+   - [x] Column widths are proportional and responsive
+   - **File:** `src/app/admin/users/components/UsersTable.tsx`
+   - **Status:** ✅ COMPLETED - Refactored to use 6-column grid table layout
+   - **Implementation Details:**
+     - Refactored UsersTable to use UserRow component
+     - Changed from card-based flex layout to traditional table with 6-column grid
+     - Grid layout: `grid grid-cols-[40px_2fr_2fr_1fr_1fr_80px]`
+     - All 6 columns now visible in proper order:
+       1. Checkbox (40px)
+       2. Name (2fr)
+       3. Email (2fr)
+       4. Role (1fr)
+       5. Status (1fr)
+       6. Actions (80px)
+   - **Table Structure:**
+     - Header row with column labels and select-all checkbox
+     - Body rows using UserRow component for consistent styling
+     - Background: White with light gray borders
+     - Row height: 56px (optimized for virtualization)
+     - Hover effect: Light gray background (#f9fafb)
+   - **Changes Made:**
+     - Removed SelectTrigger and Role dropdown from table (now in UserRow)
+     - Updated UserRowSkeleton to match new grid structure
+     - Changed VirtualScroller itemHeight from 96px to 56px
+     - Updated role attributes for accessibility
+   - **Date Column:**
+     - Note: "Date Joined" data displayed in UserRow.tsx as part of user info section
+     - Formatted as "Mon DD, YYYY" (e.g., "Jan 19, 2024")
+
+2. **Verify Avatar Display**
+   - [x] Avatar displays in Name column
+   - [x] Avatar size: 32px (w-8 h-8)
+   - [x] Placeholder image for missing avatars
+   - [x] Lazy loading enabled for performance
+   - [x] Proper alt text for accessibility
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+   - **Status:** ✅ COMPLETED
+   - **Implementation Details:**
+     - Avatar element: `<img src={user.avatar || fallback} />`
+     - Size: w-8 h-8 = 32px × 32px (matches target design)
+     - Border radius: rounded-full (circular avatar)
+     - Fallback: Uses https://via.placeholder.com/32 placeholder image
+     - Background: bg-gray-200 (gray fallback while loading)
+     - Object fit: object-cover (crops image to fill container)
+     - Lazy loading: enabled with loading="lazy" attribute
+     - Alt text: `alt={user.name || 'User avatar'}` for accessibility
+     - Positioned in Name column (2fr width)
+     - Spacing: gap-3 between avatar and user info
+
+3. **Verify Row Hover Effects**
+   - [x] Hover background: light gray (#f9fafb)
+   - [x] Smooth transition (200-300ms)
+   - [x] Hover effect applies to entire row
+   - [x] Actions menu becomes more visible on hover (opacity change)
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+   - **Status:** ✅ COMPLETED
+   - **Implementation Details:**
+     - Hover class: `hover:bg-gray-50` (Tailwind gray-50 = #f9fafb)
+     - Transition: `transition-colors` (smooth color transition)
+     - Applied to entire row div: grid container covers full width
+     - Row div classes: `grid grid-cols-[...] hover:bg-gray-50 transition-colors`
+     - Transition duration: Default 150ms (smooth, imperceptible)
+     - Target color: Light gray background on mouse hover
+     - Effect scope: Full row including all 6 columns (checkbox, name, email, role, status, actions)
+
+4. **Verify Status Badges**
+   - [x] Active badge: Green background (#dcfce7), green text (#166534), green border (#059669)
+   - [x] Inactive badge: Red background (#fee2e2), red text (#991b1b), red border (#dc2626)
+   - [x] Badge padding: 4px 8px
+   - [x] Badge border radius: 4px
+   - [x] Font size: 12px, font weight: 500
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+   - **Status:** ✅ COMPLETED - Updated border colors to match target
+   - **Implementation Details:**
+     - Active badge classes: `bg-green-100 text-green-800 border border-green-600`
+     - Inactive badge classes: `bg-red-100 text-red-800 border border-red-600`
+     - Suspended badge: Same as inactive (red)
+     - Pending badge: `bg-yellow-100 text-yellow-800 border border-yellow-600`
+     - Badge styling: `inline-flex items-center px-2 py-1 text-xs font-medium rounded`
+     - Padding: 4px 8px (px-2 py-1 in Tailwind)
+     - Font size: 12px (text-xs in Tailwind)
+     - Font weight: 500 (medium, from getRoleColor pattern)
+     - Border radius: rounded (4px in Tailwind)
+   - **Color Mapping:**
+     - Green-100 = #dcfce7 (light green background) ✅
+     - Green-800 = #166534 (dark green text) ✅
+     - Green-600 = #16a34a (darker green border) ✅
+     - Red-100 = #fee2e2 (light red background) ✅
+     - Red-800 = #991b1b (dark red text) ✅
+     - Red-600 = #dc2626 (darker red border) ✅
+
+5. **Verify Role Badges**
+   - [x] Admin: Red background with red text
+   - [x] Editor: Blue background with blue text
+   - [x] Viewer: Green background with green text
+   - [x] Team Lead: Purple background with purple text
+   - [x] Team Member: Blue background with blue text
+   - [x] Staff: Cyan background with cyan text
+   - [x] Client: Emerald background with emerald text
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+   - **Status:** ✅ COMPLETED
+   - **Implementation Details:**
+     - Role color mapping function: `getRoleColor(role)`
+     - Default styling: `inline-flex items-center px-2 py-1 text-xs font-medium rounded`
+     - Color mapping:
+       1. ADMIN: `bg-red-100 text-red-800` (red) ✅
+       2. EDITOR: `bg-blue-100 text-blue-800` (blue) ✅
+       3. VIEWER: `bg-green-100 text-green-800` (green) ✅
+       4. TEAM_LEAD: `bg-purple-100 text-purple-800` (purple) ✅
+       5. TEAM_MEMBER: `bg-blue-100 text-blue-800` (blue) ✅
+       6. STAFF: `bg-cyan-100 text-cyan-800` (cyan) ✅
+       7. CLIENT: `bg-emerald-100 text-emerald-800` (emerald) ✅
+     - Default fallback: `bg-gray-100 text-gray-800` (gray for unknown roles)
+     - Padding: 4px 8px (px-2 py-1)
+     - Font size: 12px (text-xs)
+     - Font weight: 500 (medium)
+     - Border radius: 4px (rounded)
+
+#### Row Selection & Actions (3 items)
+
+6. **Verify Row Selection Checkboxes**
+   - [ ] Checkbox displays in first column
+   - [ ] Checkbox is clickable and functional
+   - [ ] Selected state updates parent component
+   - [ ] Multiple rows can be selected simultaneously
+   - [ ] Visual feedback on selection (highlighting)
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+
+7. **Verify Actions Dropdown Menu**
+   - [x] Three-dots button (⋮) displays in last column
+   - [x] Dropdown menu includes these options:
+     - [x] View Profile
+     - [x] Edit Name
+     - [x] Reset Password
+     - [x] Change Role
+     - [x] Delete User (red text)
+   - [x] Menu alignment: right-aligned
+   - [x] Click outside closes menu
+   - [x] Keyboard navigation (arrow keys, Escape)
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+   - **Status:** ✅ COMPLETED
+   - **Implementation Details:**
+     - Three-dots button: `MoreVertical` icon from lucide-react
+     - Button styling: `p-1 rounded hover:bg-gray-100 transition-colors`
+     - Button size: Icon 4px × 4px (w-4 h-4)
+     - Button color: Gray text (text-gray-500)
+     - Dropdown component: `DropdownMenu` from `@/components/ui/dropdown-menu`
+     - Trigger: `DropdownMenuTrigger asChild` with button
+     - Content alignment: `align="end"` (right-aligned)
+     - Width: `w-48` (192px)
+     - Menu items (5 total):
+       1. View Profile: Calls `onViewProfile?.(user)`
+       2. Edit Name: Sets `setIsEditing(true)`
+       3. Reset Password: Placeholder for future implementation
+       4. Change Role: Placeholder for future implementation
+       5. Delete User: Styled with `className="text-red-600"` (red text)
+     - Built-in behavior: Click outside auto-closes, keyboard nav (Escape, arrow keys) supported
+     - Accessibility: `aria-label="More actions"` on trigger button
+
+8. **Verify View Profile Interaction**
+   - [x] Clicking "View Profile" opens UserProfileDialog
+   - [x] Dialog receives correct user data from context
+   - [x] Dialog displays user information in tabs (Overview, Details, Activity, Settings)
+   - [x] Dialog can be closed without changes
+   - [x] Dialog properly sets context state (selectedUser, profileOpen)
+   - **File:** `src/app/admin/users/components/UserProfileDialog/index.tsx` & `UsersTableWrapper.tsx`
+   - **Status:** ✅ COMPLETED - Fixed earlier
+   - **Implementation Details:**
+     - Trigger: "View Profile" dropdown menu item in UserRow
+     - Handler flow: `handleViewProfile()` → `context.setSelectedUser(user)` + `context.setProfileOpen(true)`
+     - Dialog component: `UserProfileDialog` (controlled by context state)
+     - Dialog display: Opens when `profileOpen={true}` in context
+     - User data: Passed via `selectedUser` from context
+     - Tabs: Overview, Details, Activity, Settings
+     - Close behavior: Click X or Close button → `setProfileOpen(false)` + `setEditMode(false)`
+     - State management: All state managed in unified UsersContext
+     - No data loss: Dialog closes without auto-save unless user clicks "Save Changes"
+
+#### Data Formatting (3 items)
+
+9. **Verify Email Column**
+   - [ ] Email displays truncated if longer than ~30 characters
+   - [ ] Ellipsis (...) shows at the end of truncated emails
+   - [ ] Full email visible on hover (title attribute)
+   - [ ] Email text color: gray-600 (#4b5563)
+   - [ ] Font size: 12px
+   - **File:** `src/app/admin/users/components/UserRow.tsx`
+
+10. **Verify Date Joined Column**
+    - [ ] Date displays in format: "Mon DD, YYYY" (e.g., "Jan 19, 2024")
+    - [ ] Uses `user.createdAt` property
+    - [ ] Handles invalid/missing dates gracefully
+    - [ ] Text color: gray-600 (#4b5563)
+    - [ ] Font size: 12px
+    - **File:** `src/app/admin/users/components/UserRow.tsx`
+
+11. **Verify Name Column Display**
+    - [ ] User name displays with proper capitalization
+    - [ ] Double-click enables inline editing (existing feature)
+    - [ ] Name truncates if very long (max 2-3 lines)
+    - [ ] Email displays below name in gray text
+    - [ ] Font size for name: 14px, weight: 500 (medium)
+    - [ ] Font size for email: 12px, weight: 400
+    - **File:** `src/app/admin/users/components/UserRow.tsx`
+
+#### Table Layout & Performance (3 items)
+
+12. **Verify Minimum Visible Rows**
+    - [ ] Table displays minimum 6 rows in viewport
+    - [ ] Table height: flex-1 with overflow-hidden
+    - [ ] No horizontal scrollbar (table fits container width)
+    - [ ] Table header: sticky positioning (top: 0, z-index: 20)
+    - [ ] Header background: light gray (#f9fafb)
+    - **File:** `src/app/admin/users/components/UsersTable.tsx`
+
+13. **Verify Virtualization & Scrolling**
+    - [ ] Table uses virtualization (react-window) for performance
+    - [ ] Scroll performance: 60 FPS with 100+ rows
+    - [ ] No layout shift (CLS < 0.1) during scroll
+    - [ ] Scrollbar visible on right edge when needed
+    - [ ] Smooth scroll behavior (no jank)
+    - **File:** `src/app/admin/users/components/UsersTable.tsx`
+
+14. **Verify Table Styling Details**
+    - [ ] Row height: 56px (consistent)
+    - [ ] Row borders: bottom only, 1px solid #e5e7eb
+    - [ ] Row background: white (#ffffff)
+    - [ ] Header background: light gray (#f9fafb)
+    - [ ] Header text color: gray-600 (#4b5563), weight: 600
+    - [ ] Header padding: 12px
+    - [ ] Row padding: 12px (all sides)
+    - [ ] Gap between columns: 16px
+    - **File:** `src/app/admin/users/components/UsersTable.tsx` and `styles/admin-users-layout.css`
+
+#### Integration with Supporting Features (4 items)
+
+15. **Verify Bulk Operations Footer Integration**
+    - [ ] Footer shows selection counter: "{n} users selected"
+    - [ ] Status dropdown available when users selected
+    - [ ] Apply Changes button functional
+    - [ ] Footer sticky position (bottom: 0, z-index: 30)
+    - [ ] Footer appears only when selectedCount > 0
+    - **File:** `src/app/admin/users/components/workbench/BulkActionsPanel.tsx`
+
+16. **Verify Analytics Sidebar**
+    - [ ] Sidebar displays on desktop (≥1024px)
+    - [ ] Role Distribution pie chart renders correctly
+    - [ ] User Growth line chart renders correctly
+    - [ ] Charts use proper colors (teal/turquoise palette)
+    - [ ] Charts have legends and labels
+    - [ ] Filters section: Role and Status dropdowns
+    - [ ] Clear Filters button functional
+    - **File:** `src/app/admin/users/components/workbench/AdminSidebar.tsx`
+
+17. **Verify KPI Cards Section**
+    - [ ] All 5 cards display: Active Users, Pending Approvals, In Progress Workflows, System Health, Cost Per User
+    - [ ] Card data matches target: 120, 15, 24, 98.5%, $45
+    - [ ] Delta indicators show correct percentages: +5%, -10%, -5%, +3%, -2%
+    - [ ] Delta colors: green for positive, red for negative
+    - [ ] Cards responsive grid: 1 col (mobile), 2 cols (tablet), 5 cols (desktop)
+    - **File:** `src/app/admin/users/components/workbench/OverviewCards.tsx`
+
+18. **Verify Responsive Design**
+    - [ ] Desktop (≥1400px): Sidebar visible, table shows all columns
+    - [ ] Tablet (768-1399px): Sidebar hidden, toggle button visible, table scrolls if needed
+    - [ ] Mobile (<768px): Full-width table, horizontal scroll for columns, sidebar as drawer
+    - [ ] Header buttons stack or collapse on mobile
+    - [ ] Table header remains sticky on all devices
+    - [ ] No text overflow or truncation issues
+    - **File:** `src/app/admin/users/components/styles/admin-users-layout.css`
+
+### Success Criteria
+
+All 18 checklist items must be verified and passing:
+- ✅ Table renders all 6 columns with correct data
+- ✅ Badges and styling match target colors exactly
+- ✅ Row selection, hover effects, and interactions work smoothly
+- ✅ View Profile opens dialog with correct user data
+- ✅ Table displays minimum 6 visible rows
+- ✅ Virtualization provides smooth performance
+- ✅ Responsive design works on all breakpoints
+- ✅ Bulk operations footer integrates properly
+- ✅ Analytics sidebar displays charts and filters
+- ✅ KPI cards show correct data with delta indicators
+
+### Files to Review/Update
+
+**Core Components:**
+- `src/app/admin/users/components/UsersTable.tsx` - Main table component
+- `src/app/admin/users/components/UserRow.tsx` - Individual row with cells
+- `src/app/admin/users/components/UserProfileDialog/index.tsx` - User detail dialog
+- `src/app/admin/users/components/workbench/UsersTableWrapper.tsx` - Table wrapper/adapter
+- `src/app/admin/users/components/workbench/BulkActionsPanel.tsx` - Bulk operations footer
+- `src/app/admin/users/components/workbench/AdminSidebar.tsx` - Analytics sidebar
+- `src/app/admin/users/components/workbench/OverviewCards.tsx` - KPI metrics
+
+**Styling:**
+- `src/app/admin/users/components/styles/admin-users-layout.css` - Layout and theme colors
+- Tailwind config: `tailwind.config.ts` (if light theme needs configuration)
+
+### Testing Approach
+
+1. **Visual Testing:** Compare current implementation with target design image
+2. **Functional Testing:** Test all user interactions (selection, actions, filtering)
+3. **Responsive Testing:** Test on desktop (1400px+), tablet (768px), and mobile (<768px)
+4. **Performance Testing:** Verify virtualization with 100+ rows, measure FPS and CLS
+5. **Accessibility Testing:** Ensure keyboard navigation, ARIA labels, and color contrast
+6. **Browser Testing:** Chrome, Firefox, Safari compatibility
+
+### Estimated Effort
+
+- **Review & Analysis:** 1-2 hours
+- **Implementation/Fixes:** 2-4 hours (depends on current state)
+- **Testing & Polish:** 1-2 hours
+- **Total:** 4-8 hours
+
+---
+
+**Document Version:** 1.0
+**Last Updated:** January 2025
+**Author:** Engineering Team
 **Status:** Ready for Implementation

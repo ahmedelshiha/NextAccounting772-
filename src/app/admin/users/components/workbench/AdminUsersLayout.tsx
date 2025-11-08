@@ -27,7 +27,7 @@ import '../styles/admin-users-layout.css'
  * │  (Analytics  │   ┌──────────────────��    │
  * │  + Filters)  │   │   OverviewCards  │    │
  * │              │   ├──────────────────┤    │
- * │              │   │   DirectoryHead  │    │
+ * │              ���   │   DirectoryHead  │    │
  * │              │   ├──────────────────┤    │
  * │              │   │  UsersTable      │    │
  * │              │   │  (virtualized)   │    │
@@ -88,7 +88,7 @@ export default function AdminUsersLayout() {
         user.role,
         user.status || 'ACTIVE',
         new Date(user.createdAt).toLocaleDateString(),
-        user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never'
+        user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'
       ])
 
       // Create CSV content with proper escaping
