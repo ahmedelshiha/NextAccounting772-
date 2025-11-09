@@ -12,13 +12,15 @@
 ## 📑 Table of Contents
 
 1. [Executive Summary](#executive-summary)
-2. [Technical Architecture](#technical-architecture)
-3. [Phase 1: Setup & Foundation](#phase-1-setup--foundation)
-4. [Phase 2: Component Development](#phase-2-component-development)
-5. [Phase 3: Backend Enhancement](#phase-3-backend-enhancement)
-6. [Phase 4: Integration & Testing](#phase-4-integration--testing)
-7. [File Modifications Summary](#file-modifications-summary)
-8. [Acceptance Criteria](#acceptance-criteria)
+2. [Feature Comparison: Oracle/SAP vs Current Plan](#feature-comparison)
+3. [Technical Architecture](#technical-architecture)
+4. [Phase 1: Setup & Foundation](#phase-1-setup--foundation)
+5. [Phase 2: Component Development](#phase-2-component-development)
+6. [Phase 3: Backend Enhancement](#phase-3-backend-enhancement)
+7. [Phase 4: Integration & Testing](#phase-4-integration--testing)
+8. [Phase 5: Enterprise Features (Optional)](#phase-5-enterprise-features-optional)
+9. [File Modifications Summary](#file-modifications-summary)
+10. [Acceptance Criteria](#acceptance-criteria)
 
 ---
 
