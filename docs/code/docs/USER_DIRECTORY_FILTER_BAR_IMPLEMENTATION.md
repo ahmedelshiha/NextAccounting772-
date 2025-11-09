@@ -149,7 +149,7 @@ Implement a minimal, Excel-style filter bar above the User Directory table that 
 │  ┌─────────────────────────────────┐   │
 │  │ FilterState Hook (useFilterState)   │
 │  │  ├─ search: string              │   │
-│  │  ���─ role: string | null         │   │
+│  │  ├─ role: string | null         │   │
 │  │  ├─ status: string | null       │   │
 │  │  └─ filteredUsers: UserItem[]   │   │
 │  └─────────────────────────────────┘   │
@@ -1252,15 +1252,25 @@ Phase 3 (Advanced - Future)
 
 ## ✅ Acceptance Criteria
 
-### Functional Requirements
+### MVP Functional Requirements (Phase 2-4)
 - ✅ Search works across name, email, and phone fields
 - ✅ Search is real-time with 400ms debounce
-- ✅ Role and Status dropdowns filter correctly
+- ✅ Role and Status dropdowns filter correctly (single select)
 - ✅ Select All selects only filtered results
-- ✅ Multi-select functionality works
+- ✅ Multi-select row functionality works
 - ✅ Clear Filters button resets all filters
 - ✅ Result counter shows correct counts
-- ✅ Filters persist during session
+- ✅ Filters persist during session (localStorage optional)
+
+### Enterprise Enhancements (Phase 2+)
+- ✅ Multi-select dropdowns (select multiple roles/statuses)
+- ✅ Advanced search operators (exact, contains, starts with)
+- ✅ Filter pills/badges showing active filters
+- ✅ Bulk actions panel (visible when rows selected)
+- ✅ Export filtered/selected results (CSV, Excel)
+- ✅ Column visibility toggle
+- ✅ Quick sort indicators on columns
+- ✅ Filter persistence (localStorage or user preferences)
 
 ### UI/UX Requirements
 - ✅ Filter bar is sticky (stays visible when scrolling)
