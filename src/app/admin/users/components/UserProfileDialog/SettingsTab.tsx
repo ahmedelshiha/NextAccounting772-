@@ -257,11 +257,12 @@ export const SettingsTab = memo(function SettingsTab({ user }: SettingsTabProps)
           </p>
           <Button
             variant="destructive"
+            disabled={isDeleting}
             className="w-full flex items-center gap-2"
             onClick={() => setShowDeleteDialog(true)}
           >
             <Trash2 className="h-4 w-4" />
-            Permanently Delete User
+            {isDeleting ? 'Deleting...' : 'Permanently Delete User'}
           </Button>
           <p className="text-xs text-red-700 mt-3">
             This will permanently remove the user and all associated data from the system.
