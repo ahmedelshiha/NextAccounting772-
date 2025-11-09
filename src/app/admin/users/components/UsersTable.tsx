@@ -92,7 +92,7 @@ export const UsersTable = memo(function UsersTable({
   )
 
   return (
-    <div className="flex flex-col h-full bg-white border border-gray-200 rounded-lg">
+    <div className="flex flex-col h-full w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
       {/* Table Header */}
       <div className="grid grid-cols-[40px_minmax(220px,2fr)_minmax(240px,2fr)_120px_110px_120px_80px] items-center gap-4 px-4 py-3 border-b border-gray-200 bg-gray-50 flex-shrink-0" role="row" aria-label="Table header">
         <div className="flex items-center justify-center">
@@ -112,7 +112,7 @@ export const UsersTable = memo(function UsersTable({
       </div>
 
       {/* Table Body */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-0 w-full">
         {isLoading ? (
           <div className="h-full space-y-0 overflow-auto" role="status" aria-label="Loading users">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -123,7 +123,7 @@ export const UsersTable = memo(function UsersTable({
           <div
             role="rowgroup"
             aria-label="User directory table body"
-            className="h-full overflow-hidden"
+            className="h-full w-full overflow-hidden"
           >
             <VirtualScroller
               items={users}
@@ -132,7 +132,7 @@ export const UsersTable = memo(function UsersTable({
               renderItem={(user) => renderUserRow(user)}
               overscan={5}
               getKey={(user) => user.id}
-              className="h-full"
+              className="h-full w-full"
             />
           </div>
         ) : (
