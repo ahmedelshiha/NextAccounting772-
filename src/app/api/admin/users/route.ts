@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { requireTenantContext } from '@/lib/tenant-utils'
 import prisma from '@/lib/prisma'
@@ -7,6 +7,8 @@ import { hasPermission, PERMISSIONS } from '@/lib/permissions'
 import { createHash } from 'crypto'
 import { applyRateLimit, getClientIp } from '@/lib/rate-limit'
 import { tenantFilter } from '@/lib/tenant'
+import { AuditLogService } from '@/services/audit-log.service'
+import { UserCreateSchema } from '@/schemas/users'
 
 export const runtime = 'nodejs'
 export const revalidate = 30 // ISR: Revalidate every 30 seconds
