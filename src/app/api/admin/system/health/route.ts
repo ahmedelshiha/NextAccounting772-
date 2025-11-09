@@ -223,6 +223,8 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
       checkDatabase(),
       checkRedis(),
       checkAPI(),
+      checkEmail(),
+      checkAuth(),
     ])
 
     const timeoutPromise = new Promise<never>((_, reject) => {
@@ -232,7 +234,7 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
       )
     })
 
-    const [databaseCheck, redisCheck, apiCheck] = await Promise.race([
+    const [databaseCheck, redisCheck, apiCheck, emailCheck, authCheck] = await Promise.race([
       checksPromise,
       timeoutPromise,
     ])
@@ -241,6 +243,8 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
     const checks: SystemHealthResponse['checks'] = {
       database: databaseCheck,
       api: apiCheck,
+      email: emailCheck,
+      auth: authCheck,
     }
 
     // Include Redis check if available
