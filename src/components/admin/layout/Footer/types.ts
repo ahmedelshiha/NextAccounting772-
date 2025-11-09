@@ -30,20 +30,22 @@ export interface HealthCheck {
 export interface SystemHealth {
   /** Overall system status */
   status: 'operational' | 'degraded' | 'outage' | 'unknown'
-  
+
   /** Human-readable status message */
   message: string
-  
+
   /** Individual health checks for different system components */
   checks: {
     database: HealthCheck
     redis?: HealthCheck
     api: HealthCheck
+    email?: HealthCheck
+    auth?: HealthCheck
   }
-  
+
   /** ISO timestamp of when status was checked */
   timestamp: string
-  
+
   /** System uptime in seconds (if available) */
   uptime?: number
 }

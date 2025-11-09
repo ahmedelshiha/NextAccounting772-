@@ -149,6 +149,67 @@ async function checkAPI(): Promise<{
 }
 
 /**
+ * Check email service configuration (SendGrid)
+ */
+async function checkEmail(): Promise<{
+  status: 'operational' | 'degraded' | 'outage'
+  latency: number
+  error?: string
+}> {
+  let latency = 0
+  let status: 'operational' | 'degraded' | 'outage' = 'operational'
+  let error: string | undefined
+
+  try {
+    latency = await measureTime(async () => {
+      const hasConfig = Boolean(process.env.SENDGRID_API_KEY)
+      if (!hasConfig) {
+        status = 'outage'
+        error = 'SendGrid API key not configured'
+      }
+    })
+  } catch (e) {
+    status = 'outage'
+    error = e instanceof Error ? e.message : 'Email service check failed'
+  }
+
+  return { status, latency, error }
+}
+
+/**
+ * Check authentication service configuration (NextAuth)
+ */
+async function checkAuth(): Promise<{
+  status: 'operational' | 'degraded' | 'outage'
+  latency: number
+  error?: string
+}> {
+  let latency = 0
+  let status: 'operational' | 'degraded' | 'outage' = 'operational'
+  let error: string | undefined
+
+  try {
+    latency = await measureTime(async () => {
+      const hasSecret = Boolean(process.env.NEXTAUTH_SECRET)
+      const hasUrl = Boolean(process.env.NEXTAUTH_URL)
+
+      if (!hasSecret || !hasUrl) {
+        status = 'outage'
+        const missing = []
+        if (!hasSecret) missing.push('NEXTAUTH_SECRET')
+        if (!hasUrl) missing.push('NEXTAUTH_URL')
+        error = `Missing configuration: ${missing.join(', ')}`
+      }
+    })
+  } catch (e) {
+    status = 'outage'
+    error = e instanceof Error ? e.message : 'Auth service check failed'
+  }
+
+  return { status, latency, error }
+}
+
+/**
  * GET /api/admin/system/health
  * 
  * Returns system health status
@@ -162,6 +223,8 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
       checkDatabase(),
       checkRedis(),
       checkAPI(),
+      checkEmail(),
+      checkAuth(),
     ])
 
     const timeoutPromise = new Promise<never>((_, reject) => {
@@ -171,7 +234,7 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
       )
     })
 
-    const [databaseCheck, redisCheck, apiCheck] = await Promise.race([
+    const [databaseCheck, redisCheck, apiCheck, emailCheck, authCheck] = await Promise.race([
       checksPromise,
       timeoutPromise,
     ])
@@ -180,6 +243,8 @@ export async function GET(): Promise<NextResponse<SystemHealthResponse>> {
     const checks: SystemHealthResponse['checks'] = {
       database: databaseCheck,
       api: apiCheck,
+      email: emailCheck,
+      auth: authCheck,
     }
 
     // Include Redis check if available
