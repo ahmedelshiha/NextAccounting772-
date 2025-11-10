@@ -80,6 +80,7 @@ model User {
   grantedPermissions        UserPermission[]        @relation("GrantedBy")
   userPermissions           UserPermission[]        @relation("UserPermissions")
   userProfile               UserProfile?
+  filterPresets             FilterPreset[]
   manager                   User?                   @relation("ManagerEmployee", fields: [managerId], references: [id])
   employees                 User[]                  @relation("ManagerEmployee")
   tenant                    Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
