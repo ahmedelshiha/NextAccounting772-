@@ -93,8 +93,8 @@ export const POST = withTenantContext(async (request: NextRequest) => {
     const report = await prisma.report.create({
       data: {
         id: crypto.randomUUID(),
-        tenantId: context.tenantId,
-        userId: context.userId,
+        tenantId: context.tenantId ?? undefined,
+        userId: context.userId ?? undefined,
         name,
         description: description || null,
         format: format || 'table',
