@@ -624,18 +624,6 @@ export function validateReportConfig(report: Partial<Report>): {
 }
 
 /**
- * Escape HTML special characters
- */
-function escapeHTML(str: string): string {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-}
-
-/**
  * Export report to JSON format
  */
 export function exportReportToJSON(report: Report): string {

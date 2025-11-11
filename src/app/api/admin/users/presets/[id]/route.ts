@@ -187,7 +187,7 @@ export const PATCH = withTenantContext(async (request: NextRequest, props: { par
     if ((error as any).code === 'P2002') {
       return respond.badRequest('A preset with this name already exists')
     }
-    return respond.error('Failed to update preset', 500)
+    return respond.serverError('Failed to update preset')
   }
 })
 

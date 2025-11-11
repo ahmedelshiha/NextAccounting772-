@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { tenantContext } from '@/lib/tenant-context'
 import { hasPermission, PERMISSIONS } from '@/lib/permissions'
-import { rateLimit } from '@/lib/rate-limit'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 export const GET = withTenantContext(async (request: NextRequest) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
-    if (!success) {
+    const allowed = await rateLimitAsync(identifier)
+    if (!allowed) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
@@ -42,8 +41,8 @@ export const GET = withTenantContext(async (request: NextRequest) => {
 export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
-    if (!success) {
+    const allowed = await rateLimitAsync(identifier)
+    if (!allowed) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
@@ -106,8 +105,8 @@ export const POST = withTenantContext(async (request: NextRequest) => {
 export const PATCH = withTenantContext(async (request: NextRequest) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
-    if (!success) {
+    const allowed = await rateLimitAsync(identifier)
+    if (!allowed) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
@@ -138,8 +137,8 @@ export const PATCH = withTenantContext(async (request: NextRequest) => {
 export const DELETE = withTenantContext(async (request: NextRequest) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
-    if (!success) {
+    const allowed = await rateLimitAsync(identifier)
+    if (!allowed) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
