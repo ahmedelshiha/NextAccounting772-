@@ -3,19 +3,19 @@ import prisma from '@/lib/prisma'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { tenantContext } from '@/lib/tenant-context'
 import { hasPermission } from '@/lib/permissions'
-import { rateLimit } from '@/lib/rate-limit'
+import { rateLimitAsync } from '@/lib/rate-limit'
 import { generateReportHTML, applyFilters, calculateSummaryStats } from '@/app/admin/users/utils/report-builder'
 
 export const POST = withTenantContext(async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
+    const success = await rateLimitAsync(identifier)
     if (!success) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
     const context = tenantContext.getContext()
-    const hasAccess = await hasPermission(context.userId, 'admin:reports:generate')
+    const hasAccess = await hasPermission(context.userId, 'reports.generate')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
