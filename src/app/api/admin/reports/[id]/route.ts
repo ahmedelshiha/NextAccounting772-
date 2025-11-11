@@ -87,13 +87,13 @@ export const PATCH = withTenantContext(async (request: NextRequest, { params }: 
 export const DELETE = withTenantContext(async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
+    const success = await rateLimitAsync(identifier)
     if (!success) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
     const context = tenantContext.getContext()
-    const hasAccess = await hasPermission(context.userId, 'admin:reports:delete')
+    const hasAccess = await hasPermission(context.userId, 'reports.delete')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }

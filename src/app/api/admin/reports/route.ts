@@ -68,13 +68,13 @@ export const GET = withTenantContext(async (request: NextRequest) => {
 export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     const identifier = request.headers.get('x-forwarded-for') || 'anonymous'
-    const { success } = await rateLimit(identifier)
+    const success = await rateLimitAsync(identifier)
     if (!success) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
     }
 
     const context = tenantContext.getContext()
-    const hasAccess = await hasPermission(context.userId, 'admin:reports:write')
+    const hasAccess = await hasPermission(context.userId, 'reports.write')
     if (!hasAccess) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
