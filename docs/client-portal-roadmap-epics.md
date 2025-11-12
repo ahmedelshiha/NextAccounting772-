@@ -35,6 +35,42 @@ Recommended Architecture: Modular Component Structure
 - Performance
   - Code-split tabs, skeletons, defer non-critical requests; Sentry transactions around tab loads.
 
+# Task Workflow
+
+For each task:
+
+1. Analyze: Read requirements, check dependencies, plan approach
+2. Implement: Write clean code following established patterns
+3. Validate: Test happy paths, edge cases, and compatibility
+4. Document: Update action plan and proceed to next task
+
+---
+
+## Quality Standards
+
+### Code Excellence
+- Follow DRY and SOLID principles
+- Write self-documenting code with clear naming
+- Handle errors and edge cases properly
+- Maintain backward compatibility
+
+### Security & Performance
+- Prevent XSS, injection vulnerabilities
+- Optimize queries and minimize network requests
+- Ensure responsive design and accessibility
+
+---
+
+## Status Indicators
+
+| Icon | Status | Description |
+|------|--------|-------------|
+| ✅ | Completed | Fully implemented and tested |
+| ⚠️ | In Progress | Currently working on |
+| ❌ | Blocked | Cannot proceed due to dependencies |
+| 🔄 | Needs Review | Implementation complete, awaiting validation |
+| ⏸️ | Paused | Temporarily halted |
+
 ---
 
 ## Phase 0 — Foundations (Architecture, Security, Localization)
