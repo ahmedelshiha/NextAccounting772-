@@ -42,6 +42,7 @@ export interface TaxObligation {
   applicableEntityTypes?: string[]
   vatThreshold?: number
   rules?: Record<string, any>
+  metadata?: Record<string, any>
 }
 
 export interface IdentifierValidator {
