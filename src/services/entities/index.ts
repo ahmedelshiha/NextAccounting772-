@@ -378,7 +378,7 @@ export class EntityService {
             entityId,
             userId,
             action: "ADD_REGISTRATION",
-            changes: { type, value, source },
+            changes: ({ type, value, source } as any) as Prisma.InputJsonValue,
           },
         });
       });
@@ -415,7 +415,7 @@ export class EntityService {
             entityId,
             userId,
             action: "ARCHIVE",
-            changes: { status: { from: "ACTIVE", to: "ARCHIVED" } },
+            changes: ({ status: { from: "ACTIVE", to: "ARCHIVED" } } as any) as Prisma.InputJsonValue,
           },
         });
       });
