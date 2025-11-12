@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { createHash } from 'crypto'
+
 /**
  * Data Migration Service
  * Handles legacy data import, backfills, dual-run support, and rollback
