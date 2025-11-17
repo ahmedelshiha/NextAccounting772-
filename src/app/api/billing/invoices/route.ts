@@ -13,8 +13,10 @@ const createInvoiceSchema = z.object({
 })
 
 export const GET = withTenantContext(async (request: NextRequest) => {
+  let ctx: TenantContext | undefined;
+
   try {
-    const ctx = requireTenantContext()
+    ctx = requireTenantContext()
 
     if (!ctx.userId || !ctx.tenantId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
