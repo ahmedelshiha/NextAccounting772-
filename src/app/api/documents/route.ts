@@ -23,7 +23,17 @@ type DocumentFilter = z.infer<typeof DocumentFilterSchema>
 
 export const GET = withTenantContext(async (request: NextRequest) => {
   try {
-    const { userId, tenantId } = requireTenantContext()
+    let ctx
+    try {
+      ctx = requireTenantContext()
+    } catch (contextError) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'Tenant context not available' },
+        { status: 401 }
+      )
+    }
+
+    const { userId, tenantId } = ctx
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -174,9 +184,20 @@ export const GET = withTenantContext(async (request: NextRequest) => {
       )
     }
 
-    console.error('Documents list API error:', error)
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    console.error('Documents list API error:', {
+      message: errorMsg,
+      stack: errorStack,
+    });
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        message: errorMsg,
+        ...(process.env.NODE_ENV === 'development' && { details: errorStack }),
+      },
       { status: 500 }
     )
   }
@@ -184,7 +205,17 @@ export const GET = withTenantContext(async (request: NextRequest) => {
 
 export const POST = withTenantContext(async (request: NextRequest) => {
   try {
-    const { userId, tenantId } = requireTenantContext()
+    let ctx
+    try {
+      ctx = requireTenantContext()
+    } catch (contextError) {
+      return NextResponse.json(
+        { error: 'Unauthorized', message: 'Tenant context not available' },
+        { status: 401 }
+      )
+    }
+
+    const { userId, tenantId } = ctx
     if (!userId || !tenantId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -247,9 +278,20 @@ export const POST = withTenantContext(async (request: NextRequest) => {
       },
     })
   } catch (error) {
-    console.error('Documents upload API error:', error)
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    console.error('Documents upload API error:', {
+      message: errorMsg,
+      stack: errorStack,
+    });
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        message: errorMsg,
+        ...(process.env.NODE_ENV === 'development' && { details: errorStack }),
+      },
       { status: 500 }
     )
   }

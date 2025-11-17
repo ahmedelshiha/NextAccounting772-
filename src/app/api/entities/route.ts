@@ -33,7 +33,17 @@ const createEntitySchema = z.object({
  */
 const _api_GET = async (request: NextRequest) => {
   try {
-    const ctx = requireTenantContext();
+    let ctx;
+    try {
+      ctx = requireTenantContext();
+    } catch (contextError) {
+      logger.error("Failed to get tenant context in GET /api/entities", { error: contextError });
+      return NextResponse.json(
+        { error: "Unauthorized", message: "Tenant context not available" },
+        { status: 401 }
+      );
+    }
+
     const userId = ctx.userId;
     const tenantId = ctx.tenantId;
 
@@ -60,9 +70,29 @@ const _api_GET = async (request: NextRequest) => {
       data: entities,
     });
   } catch (error) {
-    logger.error("Error listing entities", { error });
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    logger.error("Error listing entities", {
+      error: errorMsg,
+      userId,
+      tenantId,
+    });
+
+    // Log to console for production debugging
+    console.error("[ENTITIES_API_ERROR] GET failed:", {
+      message: errorMsg,
+      stack: errorStack,
+      userId,
+      tenantId,
+    });
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: errorMsg,
+        ...(process.env.NODE_ENV === 'development' && { details: errorStack }),
+      },
       { status: 500 }
     );
   }
@@ -74,7 +104,17 @@ const _api_GET = async (request: NextRequest) => {
  */
 const _api_POST = async (request: NextRequest) => {
   try {
-    const ctx = requireTenantContext();
+    let ctx;
+    try {
+      ctx = requireTenantContext();
+    } catch (contextError) {
+      logger.error("Failed to get tenant context in POST /api/entities", { error: contextError });
+      return NextResponse.json(
+        { error: "Unauthorized", message: "Tenant context not available" },
+        { status: 401 }
+      );
+    }
+
     const userId = ctx.userId;
     const tenantId = ctx.tenantId;
 
@@ -121,9 +161,29 @@ const _api_POST = async (request: NextRequest) => {
       );
     }
 
-    logger.error("Error creating entity", { error });
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
+    logger.error("Error creating entity", {
+      error: errorMsg,
+      userId,
+      tenantId,
+    });
+
+    // Log to console for production debugging
+    console.error("[ENTITIES_API_ERROR] POST failed:", {
+      message: errorMsg,
+      stack: errorStack,
+      userId,
+      tenantId,
+    });
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: errorMsg,
+        ...(process.env.NODE_ENV === 'development' && { details: errorStack }),
+      },
       { status: 500 }
     );
   }

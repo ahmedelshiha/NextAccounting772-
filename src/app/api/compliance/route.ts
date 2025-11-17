@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withTenantContext } from "@/lib/api-wrapper";
 import { requireTenantContext } from "@/lib/tenant-utils";
+import { logger } from "@/lib/logger";
 
 export const GET = withTenantContext(async (request: NextRequest) => {
   try {
-    const ctx = requireTenantContext();
+    let ctx;
+    try {
+      ctx = requireTenantContext();
+    } catch (contextError) {
+      logger.error("Failed to get tenant context in GET /api/compliance", { error: contextError });
+      return NextResponse.json(
+        { success: false, error: "Unauthorized", message: "Tenant context not available" },
+        { status: 401 }
+      );
+    }
+
     if (!ctx.userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
