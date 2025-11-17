@@ -433,24 +433,57 @@ export const POST = withTenantContext(async (request: Request) => {
             },
           })
         }
-      } catch {}
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err))
+        console.error('[SERVICE_REQUESTS_CREATE] Failed to log skipped occurrences:', error)
+      }
 
-      try { realtimeService.emitServiceRequestUpdate(parent.id, { action: 'created' }) } catch {}
+      try {
+        realtimeService.emitServiceRequestUpdate(parent.id, { action: 'created' })
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err))
+        console.error('[SERVICE_REQUESTS_CREATE] Failed to emit service request update:', error)
+      }
+
       try {
         const dates = new Set<string>()
-        try { dates.add(new Date((parent as any).scheduledAt).toISOString().slice(0,10)) } catch {}
+        try {
+          dates.add(new Date((parent as any).scheduledAt).toISOString().slice(0,10))
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          console.error('[SERVICE_REQUESTS_CREATE] Failed to parse parent scheduled date:', error)
+        }
+
         try {
           for (const item of plan.plan) {
             if (!item.conflict && item.start) {
               dates.add(new Date(item.start).toISOString().slice(0,10))
             }
           }
-        } catch {}
-        for (const d of Array.from(dates)) {
-          try { realtimeService.emitAvailabilityUpdate(parent.serviceId, { date: d }) } catch {}
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          console.error('[SERVICE_REQUESTS_CREATE] Failed to collect plan dates:', error)
         }
-      } catch {}
-      try { await logAudit({ action: 'service-request:create:recurring', actorId: ctx.userId ?? null, targetId: parent.id, details: { serviceId: parent.serviceId, occurrences: plan.plan.length, created: childrenCreated.length, skipped: skipped.length } }) } catch {}
+
+        for (const d of Array.from(dates)) {
+          try {
+            realtimeService.emitAvailabilityUpdate(parent.serviceId, { date: d })
+          } catch (err) {
+            const error = err instanceof Error ? err : new Error(String(err))
+            console.error('[SERVICE_REQUESTS_CREATE] Failed to emit availability update:', error)
+          }
+        }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err))
+        console.error('[SERVICE_REQUESTS_CREATE] Failed to emit availability updates:', error)
+      }
+
+      try {
+        await logAudit({ action: 'service-request:create:recurring', actorId: ctx.userId ?? null, targetId: parent.id, details: { serviceId: parent.serviceId, occurrences: plan.plan.length, created: childrenCreated.length, skipped: skipped.length } })
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err))
+        console.error('[SERVICE_REQUESTS_CREATE] Failed to log audit for recurring creation:', error)
+      }
 
       return respond.created({ parent, childrenCreated, skipped })
     }
