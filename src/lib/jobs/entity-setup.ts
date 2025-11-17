@@ -95,17 +95,19 @@ export async function initializeVerificationJob(
   };
 
   try {
+    const redis = getRedisClient();
     const key = `${JOB_STATE_PREFIX}${entityId}`;
     await redis.set(key, JSON.stringify(state), { ex: VERIFICATION_TIMEOUT / 1000 });
-    
+
     // Publish event
     await publishEvent("job.initialized", state);
-    
+
     logger.info("Verification job initialized", { entityId });
     return state;
   } catch (error) {
     logger.error("Failed to initialize verification job", { entityId, error });
-    throw error;
+    // Don't throw - allow setup to continue even if Redis fails
+    return state;
   }
 }
 
