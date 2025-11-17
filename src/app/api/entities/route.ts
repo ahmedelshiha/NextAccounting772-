@@ -32,6 +32,9 @@ const createEntitySchema = z.object({
  * List entities for current tenant
  */
 const _api_GET = async (request: NextRequest) => {
+  let userId: string | null | undefined;
+  let tenantId: string | null | undefined;
+
   try {
     let ctx;
     try {
@@ -44,8 +47,8 @@ const _api_GET = async (request: NextRequest) => {
       );
     }
 
-    const userId = ctx.userId;
-    const tenantId = ctx.tenantId;
+    userId = ctx.userId;
+    tenantId = ctx.tenantId;
 
     if (!userId || !tenantId) {
       return NextResponse.json(
@@ -103,6 +106,9 @@ const _api_GET = async (request: NextRequest) => {
  * Create new entity
  */
 const _api_POST = async (request: NextRequest) => {
+  let userId: string | null | undefined;
+  let tenantId: string | null | undefined;
+
   try {
     let ctx;
     try {
@@ -115,8 +121,8 @@ const _api_POST = async (request: NextRequest) => {
       );
     }
 
-    const userId = ctx.userId;
-    const tenantId = ctx.tenantId;
+    userId = ctx.userId;
+    tenantId = ctx.tenantId;
 
     if (!userId || !tenantId) {
       return NextResponse.json(
