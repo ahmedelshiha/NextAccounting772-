@@ -351,11 +351,12 @@ export async function publishEvent(
  */
 export async function enqueueVerificationJob(entityId: string): Promise<void> {
   try {
+    const redis = getRedisClient();
     await (redis as any).rpush(JOB_QUEUE, JSON.stringify({ entityId }));
     logger.info("Verification job enqueued", { entityId });
   } catch (error) {
     logger.error("Failed to enqueue verification job", { entityId, error });
-    throw error;
+    // Don't throw - allow setup to continue even if queue fails
   }
 }
 
@@ -364,16 +365,17 @@ export async function enqueueVerificationJob(entityId: string): Promise<void> {
  */
 export async function processNextVerificationJob(): Promise<VerificationJobState | null> {
   try {
+    const redis = getRedisClient();
     const job = await (redis as any).lpop(JOB_QUEUE);
     if (!job) return null;
 
     const { entityId } = JSON.parse(job as string);
-    
+
     logger.info("Processing verification job", { entityId });
-    
+
     // Run verification
     const result = await verifyEntityRegistrations(entityId);
-    
+
     return result;
   } catch (error) {
     logger.error("Error processing verification job", { error });
