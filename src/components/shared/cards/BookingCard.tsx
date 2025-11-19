@@ -207,13 +207,6 @@ export default function BookingCard({
           </div>
         )}
 
-        {/* Location */}
-        {booking.location && (
-          <div className="flex items-start gap-2 text-sm text-gray-700">
-            <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
-            <span>{booking.location}</span>
-          </div>
-        )}
 
         {/* Notes (admin) */}
         {variant === 'admin' && booking.notes && (
