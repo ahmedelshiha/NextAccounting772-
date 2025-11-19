@@ -138,7 +138,7 @@ export const POST = withTenantContext(
       // Rate limiting for creation
       const rl = await applyRateLimit(`bookings-create:${ctx.userId}`, 10, 3600_000)
       if (rl && !rl.allowed) {
-        return respond.rateLimitExceeded('Too many booking creation attempts')
+        return respond.tooMany('Too many booking creation attempts')
       }
 
       let body = await request.json()
