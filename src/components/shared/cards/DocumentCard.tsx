@@ -250,7 +250,7 @@ export default function DocumentCard({
               size="sm"
               variant="outline"
               onClick={handleDownload}
-              disabled={loading || document.status === 'QUARANTINED'}
+              disabled={loading || document.status === 'INFECTED' || document.status === 'ERROR'}
               className="flex-1"
               aria-label={`Download ${document.filename}`}
             >
