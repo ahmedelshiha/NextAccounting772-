@@ -222,10 +222,10 @@ export default function DocumentCard({
         {/* Admin Info */}
         {variant === 'admin' && (
           <div className="pt-2 border-t space-y-2 text-sm text-gray-600">
-            {document.scanStatus && (
+            {document.scannerResult && (
               <div>
-                <p className="text-xs font-medium text-gray-500">Scan Status</p>
-                <p>{document.scanStatus}</p>
+                <p className="text-xs font-medium text-gray-500">Scan Result</p>
+                <p>{document.scannerResult}</p>
               </div>
             )}
             {document.mimeType && (
