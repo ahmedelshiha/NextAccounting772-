@@ -163,7 +163,20 @@ export const DELETE = withTenantContext(async (request: NextRequest) => {
     const where: any = { id }
     if (isMultiTenancyEnabled() && tenantId) Object.assign(where, tenantFilter(tenantId))
 
+    // Get slot details before deletion for event publishing
+    const slot = await prisma.availabilitySlot.findFirst({ where })
+
     await prisma.availabilitySlot.delete({ where })
+
+    // Publish real-time event for portal and admin notifications
+    if (slot) {
+      publishSlotDeleted(
+        slot.serviceId,
+        format(slot.date, 'yyyy-MM-dd'),
+        slot.teamMemberId || undefined
+      )
+    }
+
     return NextResponse.json({ success: true })
   } catch (e: any) {
     console.error('admin/availability-slots DELETE error', e)
