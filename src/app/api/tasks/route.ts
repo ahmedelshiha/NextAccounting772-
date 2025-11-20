@@ -167,6 +167,21 @@ export const POST = withTenantContext(
         },
       })
 
+      // Log audit event
+      await logAudit({
+        tenantId,
+        userId: user.id,
+        action: 'TASK_CREATED',
+        entity: 'Task',
+        entityId: task.id,
+        changes: {
+          title: task.title,
+          priority: task.priority,
+          assigneeId: task.assigneeId,
+          dueAt: task.dueAt,
+        },
+      })
+
       return respond.created({
         data: task,
       })
