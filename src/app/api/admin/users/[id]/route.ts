@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withAdminAuth } from '@/lib/api-wrapper'
 import { respond } from '@/lib/api-response'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
 import { z } from 'zod'
 
@@ -96,7 +96,6 @@ export const PUT = withAdminAuth(
 
       // Log audit event
       await logAudit({
-        tenantId,
         userId: user.id,
         action: 'USER_UPDATED',
         entity: 'User',
@@ -155,7 +154,6 @@ export const DELETE = withAdminAuth(
 
       // Log audit event
       await logAudit({
-        tenantId,
         userId: user.id,
         action: 'USER_DEACTIVATED',
         entity: 'User',

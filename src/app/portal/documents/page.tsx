@@ -336,7 +336,7 @@ export default function PortalDocumentsPage() {
                   filename: doc.name,
                   size: doc.size,
                   mimeType: doc.contentType,
-                  status: doc.status?.toUpperCase() || 'UNKNOWN',
+                  status: (doc.status?.toUpperCase() || 'UNKNOWN') as any,
                   uploadedAt: doc.uploadedAt,
                   uploader: doc.uploadedBy,
                   url: doc.url,

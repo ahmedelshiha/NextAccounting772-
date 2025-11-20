@@ -35,7 +35,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   const { data, error, isLoading } = useSWR<NotificationListResponse>(
     url,
-    apiFetch,
+    (url) => apiFetch(url) as Promise<NotificationListResponse>,
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,

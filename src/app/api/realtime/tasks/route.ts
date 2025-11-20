@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { subscribeToTaskEvents, TaskEventPayload } from '@/lib/realtime/task-events'
 import { withTenantContext } from '@/lib/api-wrapper'
-import { requireTenantContext } from '@/lib/tenant-context'
+import { requireTenantContext } from '@/lib/tenant-utils'
 
 /**
  * GET /api/realtime/tasks

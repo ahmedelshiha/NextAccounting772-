@@ -48,7 +48,7 @@ export function useBookingRealtime(options: BookingRealtimeOptions = {}) {
       return
     }
 
-    if (options.clientId && data.clientId && data.clientId !== options.clientId) {
+    if (options.clientId && (data as any).clientId && (data as any).clientId !== options.clientId) {
       return
     }
 

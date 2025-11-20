@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Edit2, Trash2, Reply } from 'lucide-react'
 import { formatDate, formatRelativeTime } from '@/lib/shared/formatters'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/widgets/UserAvatar' // Changed import path
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface TaskCommentCardProps {
   /** The comment to display */
@@ -60,7 +60,7 @@ export default function TaskCommentCard({
 
   const isOwnComment = currentUserId === comment.author?.id
   const canActuallyEdit = canEdit && isOwnComment
-  const canActuallyDelete = canDelete && (isOwnComment || has('admin'))
+  const canActuallyDelete = canDelete && (isOwnComment || has('admin' as any))
 
   const handleEdit = async () => {
     if (editContent.trim() === comment.content) {

@@ -30,7 +30,7 @@ export function useApprovals(filters: ApprovalFilters = {}) {
 
   const url = `/api/approvals?${searchParams.toString()}`
 
-  const { data, error, isLoading } = useSWR(url, apiFetch, {
+  const { data, error, isLoading } = useSWR(url, (url) => apiFetch(url) as Promise<any>, {
     revalidateOnFocus: false,
     dedupingInterval: 10000,
   })

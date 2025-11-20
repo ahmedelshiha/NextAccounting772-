@@ -57,7 +57,7 @@ export default function ExistingBusinessTab({
       const entityId = await createEntity({
         ...data,
         country: data.country || 'AE',
-      } as ExistingBusinessInput);
+      } as any);
       onComplete(entityId);
     } catch (error: any) {
       onError(error.message || "Failed to create entity");

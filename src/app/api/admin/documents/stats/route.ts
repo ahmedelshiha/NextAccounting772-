@@ -2,7 +2,7 @@
 
 import { withAdminAuth } from '@/lib/auth-middleware'
 import { respond } from '@/lib/api-response'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 /**
  * GET /api/admin/documents/stats

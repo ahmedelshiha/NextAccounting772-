@@ -5,13 +5,13 @@
  */
 
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { respond } from '@/lib/api-response'
 import { NotificationHub } from '@/lib/notifications/hub'
 import type { NotificationQueryOptions } from '@/types/notifications'
 import { z } from 'zod'
 import { withTenantContext } from '@/lib/api-wrapper'
-import { requireTenantContext } from '@/lib/tenant-context'
+import { requireTenantContext } from '@/lib/tenant-utils'
 
 // GET - List notifications for current user
 export const GET = withTenantContext(async (request: NextRequest) => {

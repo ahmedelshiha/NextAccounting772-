@@ -13,7 +13,7 @@ export const TaskBaseSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   description: z.string().max(5000).optional().nullable(),
   status: z.nativeEnum(TaskStatus).default(TaskStatus.OPEN),
-  priority: z.nativeEnum(TaskPriority).default(TaskPriority.NORMAL),
+  priority: z.nativeEnum(TaskPriority).default(TaskPriority.MEDIUM),
   dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format').optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
 });

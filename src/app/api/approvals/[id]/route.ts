@@ -7,12 +7,12 @@
  */
 
 import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { ApprovalEngine } from '@/lib/workflows/approval-engine'
 import { respond } from '@/lib/api-response'
 import { z } from 'zod'
 import { withTenantContext } from '@/lib/api-wrapper'
-import { requireTenantContext } from '@/lib/tenant-context'
+import { requireTenantContext } from '@/lib/tenant-utils'
 
 // GET - Get approval details
 export const GET = withTenantContext(async (

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withTenantContext } from '@/lib/api-wrapper'
 import { respond } from '@/lib/api-response'
 import { TaskUpdateSchema } from '@/schemas/shared/entities/task'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
 import { z } from 'zod'
 
@@ -137,25 +137,25 @@ export const PUT = withTenantContext(
 
       // Log audit event with changes
       const changes: Record<string, any> = {}
-      if (updates.status && updates.status !== oldValues.status) {
-        changes.status = { from: oldValues.status, to: updates.status }
+      const anyUpdates = updates as any
+      if (anyUpdates.status && anyUpdates.status !== oldValues.status) {
+        changes.status = { from: oldValues.status, to: anyUpdates.status }
       }
-      if (updates.priority && updates.priority !== oldValues.priority) {
-        changes.priority = { from: oldValues.priority, to: updates.priority }
+      if (anyUpdates.priority && anyUpdates.priority !== oldValues.priority) {
+        changes.priority = { from: oldValues.priority, to: anyUpdates.priority }
       }
-      if (updates.assigneeId !== undefined && updates.assigneeId !== oldValues.assigneeId) {
-        changes.assigneeId = { from: oldValues.assigneeId, to: updates.assigneeId }
+      if (anyUpdates.assigneeId !== undefined && anyUpdates.assigneeId !== oldValues.assigneeId) {
+        changes.assigneeId = { from: oldValues.assigneeId, to: anyUpdates.assigneeId }
       }
-      if (updates.title && updates.title !== oldValues.title) {
-        changes.title = { from: oldValues.title, to: updates.title }
+      if (anyUpdates.title && anyUpdates.title !== oldValues.title) {
+        changes.title = { from: oldValues.title, to: anyUpdates.title }
       }
-      if (updates.dueAt && updates.dueAt !== oldValues.dueAt) {
-        changes.dueAt = { from: oldValues.dueAt, to: updates.dueAt }
+      if (anyUpdates.dueAt && anyUpdates.dueAt !== oldValues.dueAt) {
+        changes.dueAt = { from: oldValues.dueAt, to: anyUpdates.dueAt }
       }
 
       if (Object.keys(changes).length > 0) {
         await logAudit({
-          tenantId,
           userId: user.id,
           action: 'TASK_UPDATED',
           entity: 'Task',
@@ -204,7 +204,6 @@ export const DELETE = withTenantContext(
 
       // Log audit event before deletion
       await logAudit({
-        tenantId,
         userId: user.id,
         action: 'TASK_DELETED',
         entity: 'Task',

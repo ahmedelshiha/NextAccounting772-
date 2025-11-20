@@ -5,12 +5,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { respond } from '@/lib/api-response'
 import { NotificationHub } from '@/lib/notifications/hub'
 import { z } from 'zod'
 import { withTenantContext } from '@/lib/api-wrapper'
-import { requireTenantContext } from '@/lib/tenant-context'
+import { requireTenantContext } from '@/lib/tenant-utils'
 
 // Verify admin access helper
 async function requireAdmin(userId: string, tenantId: string) {

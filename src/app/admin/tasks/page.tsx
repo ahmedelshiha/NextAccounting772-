@@ -127,6 +127,16 @@ export default function AdminTasksPage() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-md inline-block">
+          {error instanceof Error ? error.message : String(error)}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6 p-6">
       {/* Header */}

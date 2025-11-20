@@ -3,7 +3,7 @@ import { withTenantContext } from '@/lib/api-wrapper'
 import { respond } from '@/lib/api-response'
 import { TaskFilterSchema, TaskCreateSchema } from '@/schemas/shared/entities/task'
 import { TaskStatus } from '@/types/shared/entities/task'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
 import { z } from 'zod'
 
@@ -181,7 +181,6 @@ export const POST = withTenantContext(
 
       // Log audit event
       await logAudit({
-        tenantId,
         userId: user.id,
         action: 'TASK_CREATED',
         entity: 'Task',

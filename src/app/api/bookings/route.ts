@@ -100,7 +100,7 @@ export const GET = withTenantContext(
           include: {
             service: { select: { id: true, name: true, slug: true } },
             client: { select: { id: true, email: true, name: true, image: true } },
-            assignedTeamMember: ctx.role === 'ADMIN' || ctx.role === 'TEAM_LEAD' ? { select: { id: true, email: true, name: true, image: true } } : false,
+            assignedTeamMember: ctx.role === 'ADMIN' || ctx.role === 'TEAM_LEAD' ? { select: { id: true, email: true, name: true } } : false,
           },
         }),
         prisma.booking.count({ where }),

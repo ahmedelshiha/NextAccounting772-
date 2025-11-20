@@ -49,7 +49,8 @@ const getCachedServices = withCache<any>(
     staleWhileRevalidate: 600,
     tenantAware: true,
   },
-  async (request: NextRequest, ctx: any): Promise<any> => {
+  async (request: NextRequest): Promise<any> => {
+    const ctx = requireTenantContext()
     const sp = new URL(request.url).searchParams
     const filters = ServiceFiltersSchema.parse({
       search: sp.get('search') || undefined,

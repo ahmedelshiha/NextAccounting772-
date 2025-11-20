@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { EventEmitter } from '@/lib/events/event-emitter'
 import { NotificationHub } from '@/lib/notifications/hub'
 import type { Approval, ApprovalItemType, ApprovalStatus } from '@prisma/client'

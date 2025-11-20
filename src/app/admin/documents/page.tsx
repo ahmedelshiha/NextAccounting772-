@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -433,13 +434,11 @@ export default function AdminDocumentsPage() {
                             <Shield className="h-4 w-4" />
                           </Button>
                         )}
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          href={`/admin/documents/${doc.id}`}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        <Link href={`/admin/documents/${doc.id}`}>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <Button
                           size="sm"
                           variant="outline"

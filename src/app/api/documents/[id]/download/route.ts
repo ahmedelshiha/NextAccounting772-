@@ -2,7 +2,7 @@
 
 import { withTenantAuth } from '@/lib/auth-middleware'
 import { respond } from '@/lib/api-response'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 
 /**

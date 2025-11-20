@@ -49,6 +49,7 @@ export const GET = withTenantAuth(async (request: AuthenticatedRequest) => {
 
     // TODO: Replace 'resource' with actual model name
     // Fetch data and count
+    /*
     const [data, total] = await Promise.all([
       prisma.resource.findMany({
         where: whereClause,
@@ -59,6 +60,9 @@ export const GET = withTenantAuth(async (request: AuthenticatedRequest) => {
       }),
       prisma.resource.count({ where: whereClause }),
     ])
+    */
+    const data: any[] = []
+    const total = 0
 
     return respond.ok({
       data,
@@ -106,6 +110,7 @@ export const POST = withTenantAuth(async (request: AuthenticatedRequest) => {
     // }
 
     // TODO: Replace with actual create logic
+    /*
     const resource = await prisma.resource.create({
       data: {
         ...body,
@@ -115,6 +120,8 @@ export const POST = withTenantAuth(async (request: AuthenticatedRequest) => {
     })
 
     return respond.created(resource)
+    */
+    return respond.created({})
   } catch (error) {
     console.error('POST /api/route error:', error)
     if (error instanceof z.ZodError) {
@@ -146,6 +153,7 @@ export const PUT = withTenantAuth(
 
       // Fetch existing resource to verify ownership
       // TODO: Replace 'resource' with actual model name
+      /*
       const existing = await prisma.resource.findFirst({
         where: {
           id,
@@ -156,6 +164,7 @@ export const PUT = withTenantAuth(
       if (!existing) {
         return respond.notFound('Resource not found')
       }
+      */
 
       // TODO: Add permission check if needed
       // if (!can('resource:update')) {
@@ -163,6 +172,7 @@ export const PUT = withTenantAuth(
       // }
 
       // Update resource
+      /*
       const resource = await prisma.resource.update({
         where: { id },
         data: {
@@ -173,6 +183,8 @@ export const PUT = withTenantAuth(
       })
 
       return respond.ok(resource)
+      */
+      return respond.ok({})
     } catch (error) {
       console.error('PUT /api/route/[id] error:', error)
       if (error instanceof z.ZodError) {
@@ -198,6 +210,7 @@ export const DELETE = withTenantAuth(
 
       // Fetch resource to verify ownership
       // TODO: Replace 'resource' with actual model name
+      /*
       const resource = await prisma.resource.findFirst({
         where: {
           id,
@@ -208,6 +221,7 @@ export const DELETE = withTenantAuth(
       if (!resource) {
         return respond.notFound('Resource not found')
       }
+      */
 
       // TODO: Add permission check if needed
       // if (!can('resource:delete')) {
@@ -215,7 +229,7 @@ export const DELETE = withTenantAuth(
       // }
 
       // Delete resource
-      await prisma.resource.delete({ where: { id } })
+      // await prisma.resource.delete({ where: { id } })
 
       return respond.ok({ success: true, id })
     } catch (error) {

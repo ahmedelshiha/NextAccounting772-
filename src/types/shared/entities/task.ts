@@ -134,3 +134,14 @@ export interface TaskListResponse {
     hasMore: boolean
   }
 }
+
+// Export types required by index.ts
+export type TaskFormData = TaskCreateInput
+export type TaskFilters = TaskListFilters
+export type TaskListParams = TaskListFilters
+export type TaskStats = any // Placeholder
+export type TaskStatusUpdateRequest = { status: TaskStatus }
+export type TaskTemplate = any // Placeholder
+export type TaskBoardColumn = any // Placeholder
+export type TaskGanttItem = any // Placeholder
+export type TaskKanbanCard = any // Placeholder
