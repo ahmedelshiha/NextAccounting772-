@@ -103,8 +103,7 @@ export const GET = withAdminAuth(
       console.error('User list error:', error)
       return respond.serverError()
     }
-  },
-  { requireAuth: true }
+  }
 )
 
 /**
