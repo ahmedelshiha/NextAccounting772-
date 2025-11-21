@@ -86,5 +86,5 @@ export const POST = withTenantContext(
       return respond.serverError()
     }
   },
-  { requireAuth: true, requireAdmin: true }
+  { requireAuth: true, requireTenantAdmin: true }
 )
