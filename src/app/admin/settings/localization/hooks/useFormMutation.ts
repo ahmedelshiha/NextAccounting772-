@@ -23,7 +23,7 @@ export function useFormMutation() {
       const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) }
       const result = await fetchWithTimeout<T>(url, {
         method,
-        body: body && options.json !== false ? JSON.stringify(body) : body,
+        body: body && options.json !== false ? JSON.stringify(body) : (body as any),
         headers,
       })
 
