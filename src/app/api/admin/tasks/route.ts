@@ -153,10 +153,13 @@ export const GET = withTenantContext(
  * Create a new task (admin only)
  */
 export const POST = withTenantContext(
-  async (request, { user, tenantId }) => {
+  async (request, { params }) => {
     try {
+      const ctx = requireTenantContext()
+      const { user, tenantId } = ctx
+
       // Verify admin access
-      if (!user.isAdmin) {
+      if (ctx.role !== 'SUPER_ADMIN' && !ctx.tenantRole?.includes('ADMIN')) {
         return respond.forbidden('Only administrators can create tasks')
       }
 
